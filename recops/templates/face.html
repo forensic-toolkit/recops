@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}{{ face.id }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<pre>
+    Face ID      {{ face.id }}
+    DATASET ID   {{ face.dataset.id }}
+    IMAGES
+        {% for img in face.images %}
+        - Image ID   {{ img.id }}
+          Faces      {{ img.faces | length }}
+        {% endfor %}
+
+
+</pre>
+<img src="{{ url_for('face_raw', face_id=face.id ) }}">
+
+{% endblock %}

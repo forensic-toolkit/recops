@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Search by image{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+{# Image Recognition Submition Form #}
+<form method=post enctype=multipart/form-data>
+
+    <!-- Dataset -->    
+    <select name="dataset" id="datasets">
+        {% for dataset in datasets %}
+        <option value="{{ dataset.id }}">{{ dataset.name }}</option>
+        {% endfor %}
+    </select>
+    <br>
+
+    <!-- Image -->
+    <input  name=file       type=file      accept='image/*' id="file-input"/>    
+    <br>
+    
+    <!-- Captcha -->
+    <img class="simple-captcha-img" src="data:image/png;base64, {{ captcha_image }}" />
+    <br>
+    <input type="text" class="simple-captcha-text" name="captcha-text">
+    <br>
+    <input type="hidden" name="captcha-hash" value="{{ captcha_hash }}">
+    <br>
+    <input  name=submit     type=submit    value=Submit>
+</form>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+# Using specific commit to ensure consistent version is installed
+git+https://github.com/serengil/deepface.git@631cf6423648466f3b7204a68e2eb9157e0e2d81#egg=deepface
+Pillow==8.3.1
+# tensorflow==2.8.0
+# deepface==0.0.72
+# opencv_python==4.5.5.62
+
+# numpy==1.21.1
+# matplotlib==3.5.1
+
+click==8.1.3
+
+SQLAlchemy==1.4.31
+Flask==2.0.1
+Flask-Admin==1.6.0
+Flask-SqlAlchemy==2.5.1
+Jinja2==3.1.2

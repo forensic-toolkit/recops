@@ -1,0 +1,246 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{ img.id }}</title>
+        <style type="text/css">
+            .svg-fig {
+                height: 94vh;
+                max-height: 94vh;
+                border: 1px solid #aaa;
+            }
+            .svg-container {
+                max-width: 98vw;
+                max-height: 80vh;
+                overflow-x: auto;
+                overflow-y: auto;
+                text-align: justify;
+                /*overflow: hidden;*/
+            }
+            .svg-img {
+                /*transform: scale(0.5);*/
+            }
+            .results {
+                display: block;
+                width: 98vw;
+                margin-block-start: 1em;
+                margin-block-end: 1em;
+                margin-inline-start: 40px;
+                margin-inline-end: 40px;
+            }
+            .bold-value {
+                font-weight: bold;
+            }
+            .detected-face-table { 
+                width: 96%;
+                margin: 4px;
+            }
+            .detected-face-img {
+                width: 16vw;
+            }
+            .details-table {
+            }
+            .svg-fig {}
+            .svg-container {}
+            .svg-img {}
+            .svg-img-caption {padding: 5px;}
+            .svg-img-details {display: block;}
+            /*.svg-img-details dt {display: block;}*/
+            /*.svg-img-details dd {display: block;}*/
+            /*.svg-img-details {display: block;}*/
+            .face-img-caption {
+                /*background: rgba(255, 0, 0, 0.6);*/
+                padding: 5px;
+            }
+            .face-img {
+                width: 8vw;
+            }
+            .face-fig {
+                margin-top: 10px;
+                display: flex;
+                border-bottom: 1px solid #aaa;
+            }
+            .face-img-caption {
+                /*background: rgba(255, 0, 0, 0.6);*/
+                padding: 5px;
+            }
+            .face-details {
+                display: block;
+            }
+            .face-details dt, .svg-img-details dt {
+                float: left;
+                clear: right;
+                margin-inline-end: 2ch;
+            }
+            .face-details dd, .svg-img-details dd {
+                float: right;
+                margin-inline-start: unset;
+                --definition-indent: 22ch;
+                width: calc(100% - var(--definition-indent));
+            }
+
+        </style>
+    </head>
+    <body>
+
+        <figure class=svg-fig>
+            <div class=svg-container>
+                <svg
+                    class=svg-img
+                    width="{{ img.width }}" 
+                    height="{{ img.height }}"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter x="0" y="0" width="1" height="1" id="white-bg-text">
+                            <feFlood flood-color="white" flood-opacity="0.9"/>
+                            <feComposite in="SourceGraphic" operator="xor" />
+                        </filter>
+                    </defs>
+                    <image 
+                        href="{{ img.datauri }}"
+                        width="{{ img.width }}"
+                        height="{{ img.height }}" />
+                {% for detected_face in img.detected_faces %}
+                    <rect 
+                        x="{{ detected_face.box_left }}"
+                        y="{{ detected_face.box_top  }}"
+                        width="{{  detected_face.box_right  - detected_face.box_left }}"
+                        height="{{ detected_face.box_bottom - detected_face.box_top  }}" 
+                        fill="{{ detected_face.color(threshold=threshold) }}"
+                        fill-opacity="0.1"
+                        stroke="{{ detected_face.color(threshold=threshold) }}" 
+                        stroke-width="0.3vh"/>
+                    <text
+                        x="{{ detected_face.box_right }}"
+                        y="{{ detected_face.box_top - 5 }}"
+                        filter="url(#white-bg-text)"
+                        fill="{{ detected_face.color(threshold=threshold) }}"
+                        font-weight="bold"
+                        font-size="1.7vh">{{ detected_face.short_id }}</text>
+                {% endfor %}
+                </svg>
+            </div>
+            <figcaption class="svg-img-caption">
+                <dl class="svg-img-details">
+                    <dt>Image ID</dt>
+                    <dd>{{ img.id }}</dd>
+                    
+                    <dt>Image Checksum</dt>
+                    <dd>{{ img.checksum }}</dd>
+                    
+                    <dt>Dataset ID</dt>
+                    <dd>{{ img.dataset.id }}</dd>
+                    
+                    <dt>Dataset Name</dt>
+                    <dd>{{ img.dataset.name }}</dd>
+                    
+                    <dt>Dataset Faces</dt>
+                    <dd>{{ img.detected_faces | length }}</dd>
+                    
+                    <dt>Dataset Identities</dt>
+                    <dd>{{ img.dataset.identities | length }}</dd>
+                </dl>
+            </figcaption>
+        </figure>
+
+        <!-- <hr><br> -->
+
+        <div class=results>
+
+            {% for detected_face in img.detected_faces %}
+
+                <table
+                    class=detected-face-table
+                    style="border: {{ detected_face.color(threshold=threshold) }} solid 1px;">
+                    <tr>
+                        <td style="width:10%">
+                            <figure class=detected-face-fig>
+                                <img
+                                    class=detected-face-img 
+                                    src="{{ detected_face.datauri }}"
+                                    alt="{{ detected_face.id }}">
+                                <figcaption class="detected-face-img-caption">
+                                    <dl class="detected-face-details">
+                                        <dt>Detected Face ID</dt>
+                                        <dd>{{ detected_face.id }}</dd>
+                                        <dt>Detected Face Checksum</dt>
+                                        <dd>{{ detected_face.checksum }}</dd>
+                                    </dl>
+                                </figcaption>
+                            </figure>
+                        </td>
+                        <td>
+                            {% for matched_assoc in detected_face.filter_matched_faces(
+                                                                maximum=maximum,
+                                                                identified_faces=identified_faces,
+                                                                exclude_identities=exclude_identities,
+                                                                threshold=threshold) %}
+
+                            <figure class=face-fig>
+                                <img 
+                                    class=face-img 
+                                    src="{{ matched_assoc.face.datauri }}"
+                                    alt="{{ matched_assoc.face.id }}">
+                                <figcaption class="face-img-caption">
+                                    <dl class="face-details">
+                                        <dt>Distance</dt>
+                                        <dd class="bold-value">
+                                            {{ matched_assoc.distance  }}
+                                        </dd>
+
+                                        {% for idn in matched_assoc.face.identities %}
+                                        
+                                        <dt>Identity</dt>
+                                        <!-- <dd class="bold-value">{{ idn.name }}</dd> -->
+                                        <dd><b>{{ idn.name }}</b>  ID: {{ idn.id }}</dd>
+
+                                        {% endfor %}
+                                        
+                                        <dt>Face ID</dt>
+                                        <dd>{{  matched_assoc.face.id }}</dd>
+
+                                        <dt>Face Checksum</dt>
+                                        <dd>{{  matched_assoc.face.checksum }}</dd>
+
+                                        <dt>Threshhold</dt>
+                                        <dd>
+                                            {% if threshold %}
+                                                {{ threshold }}
+                                            {% else %}
+                                                {{ matched_assoc.threshold }}
+                                            {% endif %}        
+                                        </dd>
+                                        
+                                        <!-- Extended fields -->
+                                        {% if include_extended_fields %}
+                                            {% if matched_assoc.face.gender %}
+                                                <dt>Gender</dt>
+                                                <dd>{{ matched_assoc.face.gender }}</dd>
+                                            {% endif %}
+                                            {% if matched_assoc.face.emotion %}
+                                                <dt>Emotion</dt>
+                                                <dd>{{ matched_assoc.face.emotion }}</dd>
+                                            {% endif %}
+                                            {% if matched_assoc.face.age %}
+                                                <dt>Age</dt>
+                                                <dd>{{ matched_assoc.face.age }}</dd>
+                                            {% endif %}
+                                            {% if matched_assoc.face.race %}
+                                                <dt>Race</dt>
+                                                <dd>{{ matched_assoc.face.race }}</dd>
+                                            {% endif %}
+                                        {% endif %}
+                                        
+                                    </dl>
+                                </figcaption>
+                            </figure>
+                        {% endfor %}
+                        </td>
+                    </tr>
+                </table>
+                <!-- <hr> -->
+            {% endfor %}
+        </div>
+    </body>
+</html>

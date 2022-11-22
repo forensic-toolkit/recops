@@ -1,0 +1,57 @@
+{% set width     = face.img_array.shape[1]     %}
+{% set height    = face.img_array.shape[0]     %}
+{% set short_id  = ( face.id | string() )[:13]      %}
+<svg width="{{ width }}" height="{{ height }}" xmlns="http://www.w3.org/2000/svg">        
+    
+    <defs>
+        <filter x="0" y="0" width="1" height="1" id="green-bg-text">
+            <feFlood flood-color="#32a858"/>
+            <feComposite in="SourceGraphic" operator="xor" />
+        </filter>
+    </defs>
+    
+    <defs>
+        <filter x="0" y="0" width="1" height="1" id="white-bg-text">
+            <feFlood flood-color="white" flood-opacity="0.5"/>
+            <feComposite in="SourceGraphic" operator="xor" />
+        </filter>
+    </defs>
+    
+    <image href="{{ face.datauri }}" width="{{ width }}" height="{{ height }}" />
+
+{% if face.serialized %}
+
+    <rect 
+        x="{{ face.box_left }}"
+        y="{{ face.box_top }}"
+        width="{{ face.box_right - face.box_left }}"
+        height="{{ face.box_bottom - face.box_top }}" 
+        fill="#32a858"
+        fill-opacity="0.1"
+        stroke="#32a858" 
+        stroke-width="2"
+        />
+
+    <text 
+        x="{{ face.box_left }}"
+        y="{{ face.box_bottom - 2 }}"
+        textanchor="middle"
+        textLength="{{ face.box_right - face.box_left }}"
+        filter="url(#green-bg-text)"
+        >
+    {{ short_id }}
+    </text>
+
+    <text
+        x="{{ face.box_left }}"
+        y="{{ face.box_bottom + 18 }}"
+        textanchor="middle"
+        textLength="{{ face.box_right - face.box_left }}"
+        filter="url(#white-bg-text)"
+        >
+    confidence: {{ face.box_confidence | round(3) }}
+    </text>
+
+{% endif %}
+
+</svg>

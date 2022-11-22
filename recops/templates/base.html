@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Recops</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    </head>
+    <body>
+        
+        <!-- Flash messages pushed from Flask -->
+        {% for category, message in get_flashed_messages(with_categories=True) %}
+            <div class="flash flash-{{category}}">
+                {{category}}: {{ message }}
+            </div>
+        {% endfor %}
+
+        <section class="content">
+            <header>
+                {% block header %}{% endblock %}
+            </header>
+            
+            {% block content %}{% endblock %}
+        </section>
+
+    </body>
+</html>
