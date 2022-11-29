@@ -43,7 +43,7 @@ docker exec -it my-recops recops --help
 ~/.deepface/weights      =&gt; Deepface library uses this location to store pre-trained models.
 </code></pre><p>In order to change the location of the database and files you can specify following environment variables:</p><pre tabindex=0><code>export STORAGE_URI=file:///run/media/my-external-hard-disk/data
 </code></pre><pre tabindex=0><code>export DATABASE_URI=sqlite:////run/media/my-external-hard-disk/data/recops.db
-</code></pre><p>When your dataset contains sensitive data you might want to move <code>~/.recops/data</code> to an encrypted LUKS container or another location of an external hard drive. See this <a href=/documentation/encrypt-your-data/>simple guide</a> on how to do so.</p><h2 id=usage>USAGE</h2><pre tabindex=0><code>Usage: recops [OPTIONS] COMMAND [ARGS] ...
+</code></pre><p>When your dataset contains sensitive data you might want to move <code>~/.recops/data</code> to an encrypted LUKS container or another location of an external hard drive. See this <a href=documentation/encrypt-your-data/>simple guide</a> on how to do so.</p><h2 id=usage>USAGE</h2><pre tabindex=0><code>Usage: recops [OPTIONS] COMMAND [ARGS] ...
 </code></pre><p>Options:</p><pre tabindex=0><code>  --log-level TEXT  Specify logging level
   --log-file TEXT   Specify file to output logs (by default stderr)
   --help            Show this message and exit.
@@ -71,5 +71,5 @@ docker exec -it my-recops recops --help
   recognize                       Runs face recognition on a given image...
   verify                          Runs face verification on a given...
   webui
-</code></pre><p><em>NOTE: <code>recops</code> is still under development and code is subject to major changes. Please keep in mind that the release version <code>0.1.5</code> is a BETA version.</em></p><p>This document <a href=/documentation/functionality/>here</a> thoroughly explains <code>recops</code> internals, design and functionality, we suggest reading it to get a deeper understanding.</p><div class=footer>Powered by <a href=https://gohugo.io/>Hugo</a> with
+</code></pre><p><em>NOTE: <code>recops</code> is still under development and code is subject to major changes. Please keep in mind that the release version <code>0.1.5</code> is a BETA version.</em></p><p>This document <a href=documentation/functionality/>here</a> thoroughly explains <code>recops</code> internals, design and functionality, we suggest reading it to get a deeper understanding.</p><div class=footer>Powered by <a href=https://gohugo.io/>Hugo</a> with
 <a href=https://github.com/mrmierzejewski/hugo-theme-console/>Console Theme</a>.</div></div></body></html>
